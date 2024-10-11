@@ -26,13 +26,19 @@ jobs:
           npm i -g @vercel/ncc
           npm i @actions/github
           npm run build
-      - name: Commit
+      - name: Commit changes if any
         run: |
           git config --global user.name 'wslyshptyc'
           git config --global user.email 'wesleysahputra3035@gmail.com'
-          git add package-lock.json
-          git commit -am "dist build"
-          git push
+          
+          # Check for changes
+          if [[ -n $(git status --porcelain) ]]; then
+            git add package-lock.json
+            git commit -am "dist build"
+            git push
+          else
+            echo "No changes to commit."
+          fi
 
   release:
     runs-on: ubuntu-latest
